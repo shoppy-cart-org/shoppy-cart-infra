@@ -1,9 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket       = "shoppy-cart-terraform-state-emson"
-    key          = "environments/dev/terraform.tfstate"
-    region       = "eu-north-1"
-    encrypt      = true
-    use_lockfile = true
-  }
-}
+vpc_cidr = "10.70.0.0/16"
+vpc_name = "sc-vpc"
+igw_name = "sc-igw"
