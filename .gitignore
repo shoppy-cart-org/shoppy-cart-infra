@@ -4,6 +4,8 @@
 # Terraform state
 *.tfstate
 *.tfstate.*
+environments/dev/.terraform
+environments/dev/.terraform/terraform.tfstate
 
 # Terraform crash logs
 crash.log
