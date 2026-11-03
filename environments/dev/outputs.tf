@@ -22,3 +22,23 @@ output "nat_id" {
   description = "NAT Gateway ID"
   value       = module.vpc.nat_id
 }
+
+output "bastion_sg_id" {
+  description = "Bastion SG ID"
+  value       = module.security-groups.bastion_sg_id
+}
+
+output "runner_sg_id" {
+  description = "Runner SG ID"
+  value       = module.security-groups.runner_sg_id
+}
+
+output "lb_sg_id" {
+  description = "LoadBalancer SG ID"
+  value       = module.security-groups.lb_sg_id
+}
+
+output "workers_sg_id" {
+  description = "Workers SG ID"
+  value       = module.security-groups.workers_sg_id
+}
