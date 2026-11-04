@@ -20,3 +20,13 @@ module "iam" {
   terraform_state_bucket = var.terraform_state_bucket
   terraform_state_key    = var.terraform_state_key
 }
+
+module "runner" {
+  source = "../../modules/runner"
+
+  private_subnet_id     = module.vpc.private_app_subnet_ids["private-app-sub-1"]
+  runner_sg_id          = module.security-groups.runner_sg_id
+  instance_profile_name = module.iam.runner_instance_profile_name
+
+  tags = local.common_tags
+}
