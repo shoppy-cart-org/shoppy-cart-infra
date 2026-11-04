@@ -21,3 +21,11 @@ variable "my_ip" {
     error_message = "my_ip must be a valid /32 CIDR (e.g., 1.2.3.4/32)."
   }
 }
+variable "terraform_state_bucket" {
+  description = "S3 bucket name for Terraform state"
+  type        = string
+}
+variable "terraform_state_key" {
+  description = "S3 key (path) for the Terraform state file"
+  type        = string
+}

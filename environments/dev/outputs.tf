@@ -42,3 +42,18 @@ output "workers_sg_id" {
   description = "Workers SG ID"
   value       = module.security-groups.workers_sg_id
 }
+
+output "runner_role_arn" {
+  description = "ARN of the runner IAM role"
+  value       = module.iam.runner_role_arn
+}
+
+output "runner_instance_profile_name" {
+  description = "Name of the runner instance profile (used in Phase 6)"
+  value       = module.iam.runner_instance_profile_name
+}
+
+output "terraform_role_arn" {
+  description = "ARN of the Terraform IAM role (used in Phase 8)"
+  value       = module.iam.terraform_role_arn
+}
