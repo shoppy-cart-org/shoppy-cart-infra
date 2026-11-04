@@ -57,3 +57,13 @@ output "terraform_role_arn" {
   description = "ARN of the Terraform IAM role (used in Phase 8)"
   value       = module.iam.terraform_role_arn
 }
+
+output "runner_instance_id" {
+  description = "Runner Instance ID"
+  value       = module.runner.runner_instance_id
+}
+
+output "runner_private_ip" {
+  description = "Runner Private IP"
+  value       = module.runner.runner_private_ip
+}
