@@ -37,3 +37,21 @@ variable "terraform_state_key" {
   description = "S3 key (path) for the Terraform state file"
   type        = string
 }
+
+variable "bastion_role_name" {
+  description = "Name of the bastion IAM role"
+  type        = string
+  default     = "ScBastionRole"
+}
+
+variable "bastion_policy_name" {
+  description = "Name of the bastion IAM policy"
+  type        = string
+  default     = "sc-bastion-policy"
+}
+
+variable "bastion_profile_name" {
+  description = "Name of the bastion instance profile"
+  type        = string
+  default     = "sc-bastion-instance-profile"
+}

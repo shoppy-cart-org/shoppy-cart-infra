@@ -34,6 +34,16 @@ module "runner" {
 
 module "keypair" {
   source = "../../modules/keypair"
+}
 
+module "bastion" {
+  source = "../../modules/bastion"
+
+  public_subnet_id      = module.vpc.public_subnet_ids["public-sub-1"]
+  bastion_sg_id         = module.security-groups.bastion_sg_id
+  instance_profile_name = module.iam.bastion_instance_profile_name
+  bastion_key_name      = module.keypair.bastion_key_name
+
+  tags = local.common_tags
 
 }

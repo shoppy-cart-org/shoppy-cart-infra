@@ -49,12 +49,12 @@ output "runner_role_arn" {
 }
 
 output "runner_instance_profile_name" {
-  description = "Name of the runner instance profile (used in Phase 6)"
+  description = "Name of the runner instance profile"
   value       = module.iam.runner_instance_profile_name
 }
 
 output "terraform_role_arn" {
-  description = "ARN of the Terraform IAM role (used in Phase 8)"
+  description = "ARN of the Terraform IAM role"
   value       = module.iam.terraform_role_arn
 }
 
@@ -80,4 +80,14 @@ output "runner_key_name" {
 output "bastion_key_name" {
   description = "Bastion Keypair Name"
   value       = module.keypair.bastion_key_name
+}
+
+output "bastion_instance_id" {
+  description = "Bastion Instance ID"
+  value       = module.bastion.bastion_instance_id
+}
+
+output "bastion_public_ip" {
+  description = "Bastion Public IP"
+  value       = module.bastion.bastion_public_ip
 }

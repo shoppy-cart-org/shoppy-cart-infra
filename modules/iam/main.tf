@@ -73,3 +73,64 @@ resource "aws_iam_role_policy_attachment" "terraform_policy_attachment" {
   role       = aws_iam_role.terraform_role.name
   policy_arn = aws_iam_policy.terraform_policy.arn
 }
+
+# ── Bastion Role ──
+resource "aws_iam_role" "bastion_role" {
+  name = var.bastion_role_name
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+  tags = { 
+    Name = var.bastion_role_name 
+  }
+}
+
+# ── Bastion Policy ──
+resource "aws_iam_policy" "bastion_policy" {
+  name        = var.bastion_policy_name
+  description = "Minimal permissions for the bastion: EKS describe only"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "EKSReadOnly"
+        Effect = "Allow"
+        Action = [
+          "eks:DescribeCluster",
+          "eks:ListClusters"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+  tags = { 
+    Name = var.bastion_policy_name 
+  }
+}
+
+# ── Attach Bastion Policy ──
+resource "aws_iam_role_policy_attachment" "bastion_policy_attachment" {
+  role       = aws_iam_role.bastion_role.name
+  policy_arn = aws_iam_policy.bastion_policy.arn
+}
+
+# ── Bastion Instance Profile ──
+resource "aws_iam_instance_profile" "bastion_profile" {
+  name = var.bastion_profile_name
+  role = aws_iam_role.bastion_role.name
+
+  tags = { 
+    Name = var.bastion_profile_name
+  }
+}
