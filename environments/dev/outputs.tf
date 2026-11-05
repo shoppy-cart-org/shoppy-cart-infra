@@ -67,3 +67,17 @@ output "runner_private_ip" {
   description = "Runner Private IP"
   value       = module.runner.runner_private_ip
 }
+
+output "runner_ami_id" {
+  description = "Runner AMI ID"
+  value       = module.runner.runner_ami_id
+}
+
+output "runner_key_name" {
+  description = "Runner Keypair Name"
+  value       = module.keypair.runner_key_name
+}
+output "bastion_key_name" {
+  description = "Bastion Keypair Name"
+  value       = module.keypair.bastion_key_name
+}

@@ -27,6 +27,13 @@ module "runner" {
   private_subnet_id     = module.vpc.private_app_subnet_ids["private-app-sub-1"]
   runner_sg_id          = module.security-groups.runner_sg_id
   instance_profile_name = module.iam.runner_instance_profile_name
+  runner_key_name       = module.keypair.runner_key_name
 
   tags = local.common_tags
+}
+
+module "keypair" {
+  source = "../../modules/keypair"
+
+
 }

@@ -57,6 +57,7 @@ resource "aws_instance" "runner_ec2" {
   subnet_id = var.private_subnet_id
   vpc_security_group_ids = [var.runner_sg_id]
   iam_instance_profile   = var.instance_profile_name
+  key_name = var.runner_key_name
   associate_public_ip_address = false
 
   user_data_base64  = data.cloudinit_config.runner_config.rendered

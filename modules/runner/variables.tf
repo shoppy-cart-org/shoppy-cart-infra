@@ -25,6 +25,11 @@ variable "instance_name" {
   default = "sc-runner"
 }
 
+variable "runner_key_name" {
+  description = "SSH keypair name for the runner EC2"
+  type        = string
+}
+
 variable "tags" {
   description = "Common tags"
   type        = map(string)
