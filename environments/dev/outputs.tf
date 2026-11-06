@@ -91,3 +91,15 @@ output "bastion_public_ip" {
   description = "Bastion Public IP"
   value       = module.bastion.bastion_public_ip
 }
+output "eks_cluster_name" {
+  description = "EKS cluster name"
+  value       = module.eks.cluster_name
+}
+output "node_group_name" {
+  description = "EKS node group name"
+  value       = module.eks.node_group_name
+}
+output "eks_cluster_endpoint" {
+  description = "EKS cluster endpoint (private)"
+  value       = module.eks.cluster_endpoint
+}

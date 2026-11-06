@@ -55,3 +55,22 @@ variable "bastion_profile_name" {
   type        = string
   default     = "sc-bastion-instance-profile"
 }
+
+# EKS
+variable "eks_cluster_role_name" {
+  description = "Name of the EKS cluster IAM role"
+  type        = string
+  default     = "ScEksClusterRole"
+}
+
+variable "eks_node_role_name" {
+  description = "Name of the EKS node IAM role"
+  type        = string
+  default     = "ScEksNodeRole"
+}
+
+variable "ebs_csi_role_name" {
+  description = "Name of the EBS CSI Pod Identity IAM role"
+  type        = string
+  default     = "ScEbsCsiRole"
+}

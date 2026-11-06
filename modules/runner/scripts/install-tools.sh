@@ -1,14 +1,4 @@
-#!/usr/bin/env bash
-# Options (environment variables, all optional):
-#   RUNNER_USER=ubuntu          user that gets added to the docker group
-#   K8S_MINOR=v1.36             kubectl minor line
-#   ARGOCD_VERSION=v3.5.5       argocd CLI (match your ArgoCD server minor)
-#   TERRAFORM_VERSION=1.x.y     pin Terraform (default: latest from repo)
-#   YQ_VERSION=v4.x.y           pin yq (default: latest, resolved at run time)
-#   TFLINT_VERSION=v0.x.y       pin TFLint (default: latest)
-#   INSTALL_GH_CLI=true|false   GitHub CLI
-#   INSTALL_SECURITY_TOOLS=true|false   Trivy, TFLint, Checkov
-# =============================================================================
+#!/bin/bash
 
 set -Eeuo pipefail
 
@@ -352,25 +342,3 @@ fi
 
 echo ""
 printf "  %-16s %s\n" "docker daemon:" "$($SUDO systemctl is-active docker 2>/dev/null || echo unknown)"
-
-====================================================
-🎉 Shoppy Cart runner tooling installed.
-====================================================
-Next steps:
-  1. newgrp docker                       # or log out/in to activate docker group
-  2. docker run --rm hello-world         # smoke test
-  3. aws sts get-caller-identity         # must show the instance-profile role
-  4. aws eks update-kubeconfig --name <cluster> --region <region>
-  5. Install the GitHub runner (actions/runner) as a NON-root user;
-     run its ./bin/installdependencies.sh first.
-
-Hardening reminders:
-  - IMDSv2: set HttpPutResponseHopLimit=2 on the instance if containers
-    (docker build/run steps) must reach the instance-profile credentials.
-  - Least-privilege role: ECR push/pull, eks:DescribeCluster, Terraform
-    state (S3 + lock), CloudWatch Logs — nothing broader.
-  - Don't run fork PRs on this self-hosted runner; prefer ephemeral runners.
-  - 'docker' group membership is root-equivalent; treat the runner as a
-    trusted, isolated host (dedicated subnet, no inbound access).
-  - Schedule 'docker system prune -af --filter until=72h' to protect disk.
-====================================================

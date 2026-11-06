@@ -33,21 +33,6 @@ data "cloudinit_config" "runner_config" {
     filename     = "install-runner.sh"
   }
 
-   # 3. Copy the registration script to disk (manual step)
-  part {
-    content_type = "text/cloud-config"
-    filename     = "write-register-script.yaml"
-    content = yamlencode({
-      write_files = [
-        {
-          path        = "/home/ubuntu/register-runner.sh"
-          permissions = "0755"
-          owner       = "ubuntu:ubuntu"
-          content     = file("${path.module}/scripts/register-runner.sh")
-        }
-      ]
-    })
-  }
 }
 
 # Runner EC2
