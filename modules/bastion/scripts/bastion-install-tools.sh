@@ -1,26 +1,4 @@
-#!/usr/bin/env bash
-# =============================================================================
-# Shoppy Cart — EKS Bastion Host Setup
-# Target : Ubuntu Server 24.04 LTS (EC2, amd64 or arm64)
-# Purpose: the box you SSH/SSM into to manage the EKS cluster:
-#          kubectl, helm, kustomize, argocd, aws eks update-kubeconfig, terraform
-# Auth   : EC2 instance profile (NO static AWS keys)
-# K8s    : v1.36
-#
-# Usage  : ./setup-shoppy-bastion.sh              (run as a sudo-capable user)
-#          EKS_CLUSTER_NAME=shoppy AWS_REGION=eu-west-3 ./setup-shoppy-bastion.sh
-#
-# Options (environment variables, all optional):
-#   RUNNER_USER=ubuntu        user who gets kubeconfig + shell completions
-#   EKS_CLUSTER_NAME / AWS_REGION   if both set, kubeconfig is generated for you
-#   K8S_MINOR=v1.36           kubectl minor line
-#   ARGOCD_VERSION=v3.5.5     argocd CLI (match your ArgoCD server minor)
-#   KUSTOMIZE_VERSION=v5.x.y  default: latest kustomize/* release
-#   TERRAFORM_VERSION=1.x.y   default: latest from HashiCorp repo
-#   YQ_VERSION=v4.x.y         default: latest
-#   K9S_VERSION=v0.x.y        default: latest
-#   INSTALL_TERRAFORM=true|false   INSTALL_GH_CLI=true|false   INSTALL_K9S=true|false
-# =============================================================================
+#!/bin/bash
 
 set -Eeuo pipefail
 
@@ -292,8 +270,16 @@ fi
 EOF
 ok "completions for kubectl/helm/kustomize/argocd + alias 'k'"
 
+# 11. Install bash-completion 
+sudo apt-get update && sudo apt-get install -y bash-completion
+echo 'source /usr/share/bash-completion/bash_completion' >> ~/.bashrc
+echo 'source <(kubectl completion bash)' >> ~/.bashrc
+echo 'alias k=kubectl' >> ~/.bashrc
+echo 'complete -F __start_kubectl k' >> ~/.bashrc
+source ~/.bashrc
+
 # -----------------------------------------------------------------------------
-# 11. FINAL VERIFICATION + VERSION SUMMARY
+# 12. FINAL VERIFICATION + VERSION SUMMARY
 # -----------------------------------------------------------------------------
 show() {  # show <label> <cmd> [args...]  -> first line of the command's output
   local label="$1"; shift
