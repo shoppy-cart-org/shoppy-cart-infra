@@ -1,18 +1,3 @@
-# SUBNET TAGS FOR AWS LOAD BALANCER CONTROLLER
-resource "aws_ec2_tag" "public_elb" {
-  for_each    = var.public_subnet_ids
-  resource_id = each.value
-  key         = "kubernetes.io/role/elb"
-  value       = "1"
-}
-
-resource "aws_ec2_tag" "private_internal_elb" {
-  for_each    = var.private_subnet_ids
-  resource_id = each.value
-  key         = "kubernetes.io/role/internal-elb"
-  value       = "1"
-}
-
 # EKS CLUSTER
 resource "aws_eks_cluster" "my_eks" {
   name     = var.eks_cluster_name

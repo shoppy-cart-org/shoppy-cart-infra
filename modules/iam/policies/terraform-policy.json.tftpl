@@ -109,7 +109,17 @@
         "eks:DisassociateAccessPolicy",
         "eks:CreatePodIdentityAssociation",
         "eks:DeletePodIdentityAssociation",
-        "eks:DescribePodIdentityAssociation"
+        "eks:DescribePodIdentityAssociation",
+        "eks:ListAssociatedAccessPolicies"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "TerraformAutoscaling",
+      "Effect": "Allow",
+      "Action": [
+        "autoscaling:DescribeTags",
+        "autoscaling:DescribeAutoScalingGroups"
       ],
       "Resource": "*"
     },

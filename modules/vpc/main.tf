@@ -21,7 +21,10 @@ resource "aws_subnet" "public_sub" {
 
   tags = merge(
     var.tags,
-    { Name = each.key }
+    {
+      Name                     = each.key,
+      "kubernetes.io/role/elb" = "1" # tag for load balancer discovery
+    }
   )
 }
 
@@ -34,7 +37,10 @@ resource "aws_subnet" "private_app_sub" {
 
   tags = merge(
     var.tags,
-    { Name = each.key }
+    {
+      Name                              = each.key,
+      "kubernetes.io/role/internal-elb" = "1" # for internal 
+    }
   )
 }
 
