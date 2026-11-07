@@ -21,8 +21,8 @@ variable "instance_type" {
 
 variable "instance_name" {
   description = "Runner Instance Name"
-  type = string
-  default = "sc-runner"
+  type        = string
+  default     = "sc-runner"
 }
 
 variable "runner_key_name" {

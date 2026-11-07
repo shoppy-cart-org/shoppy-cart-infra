@@ -1,13 +1,13 @@
 variable "eks_cluster_name" {
   description = "Name of EKS Cluster"
   type        = string
-  default = "sc-eks-cluster"
+  default     = "sc-eks-cluster"
 }
 
 variable "eks_cluster_ng_name" {
   description = "Name of EKS Cluster Node Group"
   type        = string
-  default = "sc-eks-cluster-ng"
+  default     = "sc-eks-cluster-ng"
 }
 
 variable "cluster_version" {

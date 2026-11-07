@@ -4,7 +4,10 @@
     {
       "Sid": "AssumeTerraformRole",
       "Effect": "Allow",
-      "Action": "sts:AssumeRole",
+      "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ],
       "Resource": "${terraform_role_arn}"
     }
   ]

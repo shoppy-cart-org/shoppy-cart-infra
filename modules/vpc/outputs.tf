@@ -20,5 +20,5 @@ output "private_data_subnet_ids" {
 
 output "nat_id" {
   description = "Nat ID"
-  value = aws_nat_gateway.my_nat.id
+  value       = aws_nat_gateway.my_nat.id
 }

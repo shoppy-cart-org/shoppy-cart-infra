@@ -34,6 +34,9 @@ module "runner" {
 
 module "keypair" {
   source = "../../modules/keypair"
+
+  bastion_public_key = var.bastion_public_key
+  runner_public_key  = var.runner_public_key
 }
 
 module "bastion" {

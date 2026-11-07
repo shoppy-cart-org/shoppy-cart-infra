@@ -29,3 +29,13 @@ variable "terraform_state_key" {
   description = "S3 key (path) for the Terraform state file"
   type        = string
 }
+
+variable "runner_public_key" {
+  description = "Runner EC2 public key content"
+  type        = string
+}
+
+variable "bastion_public_key" {
+  description = "Bastion EC2 public key content"
+  type        = string
+}

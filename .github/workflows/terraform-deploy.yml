@@ -1,0 +1,140 @@
+name: Terraform Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type apply to confirm deployment'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Generate Terraform Plan
+
+    if: github.ref == 'refs/heads/main'
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - aws
+      - shoppy-cart
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/dev
+
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+
+      TF_VAR_runner_public_key: ${{ vars.SSH_PUBLIC_KEY_RUNNER }}
+      TF_VAR_bastion_public_key: ${{ vars.SSH_PUBLIC_KEY_BASTION }}
+
+      TF_IN_AUTOMATION: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.TF_ROLE_ARN }}
+          role-session-name: shoppy-cart-terraform-deploy-plan
+          aws-region: ${{ vars.AWS_REGION }}
+          role-chaining: true
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.17.1"
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: |
+          terraform plan \
+            -input=false \
+            -no-color \
+            -out=tfplan
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-deploy-plan
+          path: environments/dev/tfplan
+          retention-days: 1
+
+  apply:
+    name: Apply Terraform Plan
+
+    needs: plan
+
+    if: github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'apply'
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - aws
+      - shoppy-cart
+
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: environments/dev
+
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+
+      TF_VAR_runner_public_key: ${{ vars.SSH_PUBLIC_KEY_RUNNER }}
+      TF_VAR_bastion_public_key: ${{ vars.SSH_PUBLIC_KEY_BASTION }}
+
+      TF_IN_AUTOMATION: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-deploy-plan
+          path: environments/dev/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.TF_ROLE_ARN }}
+          role-session-name: shoppy-cart-terraform-deploy-apply
+          aws-region: ${{ vars.AWS_REGION }}
+          role-chaining: true
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.17.1"
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Apply
+        run: terraform apply -input=false -no-color tfplan

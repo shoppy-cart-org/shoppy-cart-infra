@@ -20,7 +20,7 @@ resource "aws_vpc_security_group_ingress_rule" "ssh_from_myip" {
 resource "aws_vpc_security_group_egress_rule" "bastion_allow_all_traffic" {
   security_group_id = aws_security_group.bastion_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" 
+  ip_protocol       = "-1"
 }
 
 # CICD Runner SG
@@ -35,17 +35,17 @@ resource "aws_security_group" "runner_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "ruuner_ssh_from_bastion" {
-  security_group_id = aws_security_group.runner_sg.id
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
+  security_group_id            = aws_security_group.runner_sg.id
+  from_port                    = 22
+  ip_protocol                  = "tcp"
+  to_port                      = 22
   referenced_security_group_id = aws_security_group.bastion_sg.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "runner_allow_all_traffic" {
   security_group_id = aws_security_group.runner_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" 
+  ip_protocol       = "-1"
 }
 
 # LB SG
@@ -76,9 +76,9 @@ resource "aws_vpc_security_group_ingress_rule" "https_traffic" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "lb_allow_to_workers" {
-  security_group_id = aws_security_group.lb_sg.id
+  security_group_id            = aws_security_group.lb_sg.id
   referenced_security_group_id = aws_security_group.workers_sg.id
-  ip_protocol       = "-1" 
+  ip_protocol                  = "-1"
 }
 
 # Node Group SG (Workers)
@@ -93,27 +93,27 @@ resource "aws_security_group" "workers_sg" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "workers_ssh_from_bastion" {
-  security_group_id = aws_security_group.workers_sg.id
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
+  security_group_id            = aws_security_group.workers_sg.id
+  from_port                    = 22
+  ip_protocol                  = "tcp"
+  to_port                      = 22
   referenced_security_group_id = aws_security_group.bastion_sg.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "traffic_from_lb" {
-  security_group_id = aws_security_group.workers_sg.id
-  ip_protocol       = "-1"
+  security_group_id            = aws_security_group.workers_sg.id
+  ip_protocol                  = "-1"
   referenced_security_group_id = aws_security_group.lb_sg.id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "traffic_from_itself" {
-  security_group_id = aws_security_group.workers_sg.id
-  ip_protocol       = "-1"
+  security_group_id            = aws_security_group.workers_sg.id
+  ip_protocol                  = "-1"
   referenced_security_group_id = aws_security_group.workers_sg.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "workers_allow_all_traffic" {
   security_group_id = aws_security_group.workers_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  ip_protocol       = "-1" 
+  ip_protocol       = "-1"
 }

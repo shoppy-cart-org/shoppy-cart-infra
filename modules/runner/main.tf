@@ -37,26 +37,26 @@ data "cloudinit_config" "runner_config" {
 
 # Runner EC2
 resource "aws_instance" "runner_ec2" {
-  ami = data.aws_ami.ubuntu.id
-  instance_type = var.instance_type
-  subnet_id = var.private_subnet_id
-  vpc_security_group_ids = [var.runner_sg_id]
-  iam_instance_profile   = var.instance_profile_name
-  key_name = var.runner_key_name
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = var.instance_type
+  subnet_id                   = var.private_subnet_id
+  vpc_security_group_ids      = [var.runner_sg_id]
+  iam_instance_profile        = var.instance_profile_name
+  key_name                    = var.runner_key_name
   associate_public_ip_address = false
 
-  user_data_base64  = data.cloudinit_config.runner_config.rendered
+  user_data_base64 = data.cloudinit_config.runner_config.rendered
 
   root_block_device {
     volume_size = 30
     volume_type = "gp3"
-    encrypted = true
+    encrypted   = true
   }
 
 
   tags = merge(
     var.tags,
-    {Name= var.instance_name}
+    { Name = var.instance_name }
   )
 
 }
