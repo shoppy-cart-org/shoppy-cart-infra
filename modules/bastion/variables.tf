@@ -6,7 +6,7 @@ variable "public_subnet_id" {
 variable "bastion_name" {
   description = "Bastion EC2 Name"
   type        = string
-  default = "sc-bastion"
+  default     = "sc-bastion"
 }
 
 variable "bastion_sg_id" {

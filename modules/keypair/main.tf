@@ -11,7 +11,7 @@ resource "aws_key_pair" "bastion_keypair" {
 resource "aws_key_pair" "runner_keypair" {
   key_name   = var.runner_key_name
   public_key = var.runner_public_key
-  tags = { 
+  tags = {
     Name = var.runner_key_name
   }
 }

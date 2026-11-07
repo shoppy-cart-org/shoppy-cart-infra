@@ -2,20 +2,20 @@
 resource "aws_iam_role" "runner_role" {
   name = var.runner_role_name
   assume_role_policy = jsonencode({
-  Version = "2012-10-17"
+    Version = "2012-10-17"
 
-  Statement = [
-    {
-      Effect = "Allow"
-      Principal = {
-        Service = "ec2.amazonaws.com"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
       }
-      Action = [
-        "sts:AssumeRole",
-        "sts:TagSession"
-      ]
-    }
-  ]
+    ]
   })
 }
 
@@ -23,20 +23,20 @@ resource "aws_iam_role" "runner_role" {
 resource "aws_iam_role" "terraform_role" {
   name = var.terraform_role_name
   assume_role_policy = jsonencode({
-  Version = "2012-10-17"
+    Version = "2012-10-17"
 
-  Statement = [
-    {
-      Effect = "Allow"
-      Principal = {
-        AWS = aws_iam_role.runner_role.arn
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          AWS = aws_iam_role.runner_role.arn
+        }
+        Action = [
+          "sts:AssumeRole",
+          "sts:TagSession"
+        ]
       }
-      Action = [
-        "sts:AssumeRole",
-        "sts:TagSession"
-      ]
-    }
-  ]
+    ]
   })
 }
 
@@ -96,8 +96,8 @@ resource "aws_iam_role" "bastion_role" {
       }
     ]
   })
-  tags = { 
-    Name = var.bastion_role_name 
+  tags = {
+    Name = var.bastion_role_name
   }
 }
 
@@ -120,8 +120,8 @@ resource "aws_iam_policy" "bastion_policy" {
       }
     ]
   })
-  tags = { 
-    Name = var.bastion_policy_name 
+  tags = {
+    Name = var.bastion_policy_name
   }
 }
 
@@ -136,7 +136,7 @@ resource "aws_iam_instance_profile" "bastion_profile" {
   name = var.bastion_profile_name
   role = aws_iam_role.bastion_role.name
 
-  tags = { 
+  tags = {
     Name = var.bastion_profile_name
   }
 }
@@ -202,7 +202,7 @@ resource "aws_iam_role" "ebs_csi_role" {
     Statement = [{
       Effect    = "Allow"
       Principal = { Service = "pods.eks.amazonaws.com" }
-      Action    = ["sts:AssumeRole", "sts:TagSession"]   
+      Action    = ["sts:AssumeRole", "sts:TagSession"]
     }]
   })
 

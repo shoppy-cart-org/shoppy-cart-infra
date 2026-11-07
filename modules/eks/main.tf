@@ -20,7 +20,7 @@ resource "aws_eks_cluster" "my_eks" {
   role_arn = var.cluster_role_arn
 
   vpc_config {
-    subnet_ids              = values(var.private_subnet_ids) 
+    subnet_ids              = values(var.private_subnet_ids)
     endpoint_private_access = true
     endpoint_public_access  = false
   }
@@ -31,7 +31,7 @@ resource "aws_eks_cluster" "my_eks" {
   }
 
   tags = merge(var.tags, { Name = var.eks_cluster_name })
-  
+
 }
 
 # Allow bastion to reach the EKS API server
@@ -60,7 +60,7 @@ resource "aws_eks_node_group" "my_eks_ng" {
     max_size     = var.node_max_size
   }
 
-  tags = merge(var.tags, { Name = var.eks_cluster_ng_name})
+  tags = merge(var.tags, { Name = var.eks_cluster_ng_name })
 }
 
 # Tag the node group's EC2 instances with a static Name

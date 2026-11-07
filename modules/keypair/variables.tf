@@ -1,13 +1,13 @@
 variable "bastion_key_name" {
   description = "Bastion Key Name"
-  type = string
-  default = "sc-bastion-keypair"
+  type        = string
+  default     = "sc-bastion-keypair"
 }
 
 variable "runner_key_name" {
   description = "Runner Key Name"
-  type = string
-  default = "sc-runner-keypair"
+  type        = string
+  default     = "sc-runner-keypair"
 }
 
 variable "bastion_public_key" {

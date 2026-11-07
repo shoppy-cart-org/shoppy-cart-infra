@@ -32,7 +32,7 @@ resource "aws_instance" "bastion_ec2" {
   iam_instance_profile   = var.instance_profile_name
   key_name               = var.bastion_key_name
 
-  associate_public_ip_address = true    
+  associate_public_ip_address = true
 
   user_data_base64 = data.cloudinit_config.bastion_config.rendered
 
@@ -43,9 +43,9 @@ resource "aws_instance" "bastion_ec2" {
   }
 
   tags = merge(
-    var.tags, 
+    var.tags,
     {
-        Name = var.bastion_name
+      Name = var.bastion_name
     }
-    )
+  )
 }
