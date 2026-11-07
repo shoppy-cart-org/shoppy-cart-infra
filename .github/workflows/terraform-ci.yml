@@ -1,0 +1,161 @@
+name: Terraform CI
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - 'environments/dev/**'
+      - 'modules/**'
+      - '.github/workflows/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  terraform-ci:
+    name: Terraform Validation and Plan
+
+    # Prevent executiom of untrusted fork PR code on our runner.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - aws
+      - shoppy-cart
+
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+
+      TF_VAR_runner_public_key: ${{ vars.SSH_PUBLIC_KEY_RUNNER }}
+      TF_VAR_bastion_public_key: ${{ vars.SSH_PUBLIC_KEY_BASTION }}
+
+      TF_IN_AUTOMATION: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.TF_ROLE_ARN }}
+          role-session-name: shoppy-cart-terraform-ci
+          aws-region: ${{ vars.AWS_REGION }}
+          role-chaining: true
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.17.1"
+          terraform_wrapper: false
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+        working-directory: .
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: environments/dev
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: environments/dev
+
+      - name: Terraform Plan
+        id: plan
+        continue-on-error: true
+        run: |
+          set -o pipefail
+
+          terraform plan \
+            -input=false \
+            -no-color \
+            -detailed-exitcode \
+            -out=tfplan 2>&1 | tee plan_output.txt
+
+          exit_code=${PIPESTATUS[0]}
+
+          echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+
+          if [ "$exit_code" -eq 1 ]; then
+            exit 1
+          fi
+
+          exit 0
+        working-directory: environments/dev
+
+      - name: Upload Terraform plan
+        if: steps.plan.outputs.exit_code == '0' || steps.plan.outputs.exit_code == '2'
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-ci-plan
+          path: environments/dev/tfplan
+          retention-days: 1
+
+      - name: Generate safe plan summary
+        if: always()
+        id: summary
+        run: |
+          if [ ! -f environments/dev/plan_output.txt ]; then
+            echo "summary=Terraform plan output unavailable." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          summary=$(grep -E '^Plan:|^No changes\.' environments/dev/plan_output.txt | tail -1 || true)
+
+          if [ -z "$summary" ]; then
+            summary="Plan summary unavailable. Check workflow logs."
+          fi
+
+          echo "summary=$summary" >> "$GITHUB_OUTPUT"
+
+      - name: Comment on pull request
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `${{ steps.summary.outputs.summary }}`;
+            const exitCode = `${{ steps.plan.outputs.exit_code }}`;
+
+            const status =
+              exitCode === "0" ? "No infrastructure changes" :
+              exitCode === "2" ? "Infrastructure changes detected" :
+              "Terraform plan failed or was not completed";
+
+            const body = [
+              "## Terraform CI Results",
+              "",
+              `**Status:** ${status}`,
+              "",
+              `**Plan summary:** ${summary}`,
+              "",
+              "The full Terraform plan is not included in this comment.",
+              "",
+              "Review the workflow logs and restricted artifact if further inspection is required."
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+      - name: Fail if Terraform plan failed
+        if: steps.plan.outputs.exit_code == '1' || steps.plan.outputs.exit_code == ''
+        run: exit 1

@@ -1,8 +1,7 @@
 # Bastion Keypair
 resource "aws_key_pair" "bastion_keypair" {
   key_name   = var.bastion_key_name
-  public_key = file(pathexpand(var.bastion_public_key_path))
-
+  public_key = var.bastion_public_key
   tags = {
     Name = var.bastion_key_name
   }
@@ -11,8 +10,7 @@ resource "aws_key_pair" "bastion_keypair" {
 # Runner Keypair
 resource "aws_key_pair" "runner_keypair" {
   key_name   = var.runner_key_name
-  public_key = file(pathexpand(var.runner_public_key_path))
-
+  public_key = var.runner_public_key
   tags = { 
     Name = var.runner_key_name
   }
