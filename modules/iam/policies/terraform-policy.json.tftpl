@@ -84,6 +84,36 @@
       "Resource": "*"
     },
     {
+      "Sid": "TerraformEKS",
+      "Effect": "Allow",
+      "Action": [
+        "eks:DescribeCluster",
+        "eks:ListClusters",
+        "eks:CreateCluster",
+        "eks:DeleteCluster",
+        "eks:UpdateClusterConfig",
+        "eks:CreateNodeGroup",
+        "eks:DeleteNodeGroup",
+        "eks:UpdateNodeGroupConfig",
+        "eks:DescribeNodeGroup",
+        "eks:ListNodeGroups",
+        "eks:CreateAddon",
+        "eks:DeleteAddon",
+        "eks:UpdateAddon",
+        "eks:DescribeAddon",
+        "eks:ListAddons",
+        "eks:CreateAccessEntry",
+        "eks:DeleteAccessEntry",
+        "eks:DescribeAccessEntry",
+        "eks:AssociateAccessPolicy",
+        "eks:DisassociateAccessPolicy",
+        "eks:CreatePodIdentityAssociation",
+        "eks:DeletePodIdentityAssociation",
+        "eks:DescribePodIdentityAssociation"
+      ],
+      "Resource": "*"
+    },
+    {
       "Sid": "TerraformSTS",
       "Effect": "Allow",
       "Action": [
