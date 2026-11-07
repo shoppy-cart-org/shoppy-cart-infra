@@ -10,7 +10,10 @@ resource "aws_iam_role" "runner_role" {
       Principal = {
         Service = "ec2.amazonaws.com"
       }
-      Action = "sts:AssumeRole"
+      Action = [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
     }
   ]
   })
@@ -28,7 +31,10 @@ resource "aws_iam_role" "terraform_role" {
       Principal = {
         AWS = aws_iam_role.runner_role.arn
       }
-      Action = "sts:AssumeRole"
+      Action = [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
     }
   ]
   })
