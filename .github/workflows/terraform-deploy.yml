@@ -3,16 +3,43 @@ on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: 'Type apply to confirm deployment'
+        description: 'Confirm deployment (select "apply" to deploy)'
         required: true
-        type: string
+        type: choice
+        options:
+          - 'no'
+          - 'apply'
+        default: 'no'
 
 permissions:
   contents: read
 
 jobs:
+  validate-input:
+    name: Validate Confirmation Input
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+      - aws
+      - shoppy-cart
+
+    env:
+      CONFIRM_INPUT: ${{ inputs.confirm }}
+
+    steps:
+      - name: Check confirmation input
+        run: |
+          if [ "$CONFIRM_INPUT" != "apply" ]; then
+            echo "::error::Deployment cancelled. You selected '$CONFIRM_INPUT'. Select 'apply' to deploy."
+            exit 1
+          fi
+
+          echo "Request approved. Starting deployment..."
   plan:
     name: Generate Terraform Plan
+    needs: validate-input
 
     if: github.ref == 'refs/heads/main'
 
@@ -80,7 +107,7 @@ jobs:
   apply:
     name: Apply Terraform Plan
 
-    needs: plan
+    needs: [validate-input, plan]
 
     if: github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'apply'
 
