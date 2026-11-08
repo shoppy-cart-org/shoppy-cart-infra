@@ -80,7 +80,7 @@ jobs:
         id: plan
         continue-on-error: true
         run: |
-          set -o pipefail
+          set +e
 
           terraform plan \
             -input=false \
@@ -90,13 +90,15 @@ jobs:
 
           exit_code=${PIPESTATUS[0]}
 
+          set -e
+
           echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
 
-          if [ "$exit_code" -eq 1 ]; then
-            exit 1
+          if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 2 ]; then
+            exit 0
           fi
 
-          exit 0
+          exit 1
         working-directory: environments/dev
 
       - name: Upload Terraform plan
