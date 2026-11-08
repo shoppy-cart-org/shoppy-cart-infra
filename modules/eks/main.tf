@@ -110,3 +110,11 @@ resource "aws_eks_access_policy_association" "bastion_admin_associate" {
 
   depends_on = [aws_eks_access_entry.bastion_admin]
 }
+
+# ── AWS Load Balancer Controller Pod Identity Association ──
+resource "aws_eks_pod_identity_association" "aws_lb_controller" {
+  cluster_name    = aws_eks_cluster.my_eks.name
+  namespace       = "kube-system"
+  service_account = "aws-load-balancer-controller"
+  role_arn        = var.aws_lb_controller_role_arn
+}

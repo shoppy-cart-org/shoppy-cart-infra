@@ -212,3 +212,35 @@ resource "aws_iam_role_policy_attachment" "ebs_csi" {
   role       = aws_iam_role.ebs_csi_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
+
+# ── AWS Load Balancer Controller Role (Pod Identity) ──
+resource "aws_iam_role" "aws_lb_controller_role" {
+  name = var.aws_lb_controller_role_name
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "pods.eks.amazonaws.com" }
+      Action    = ["sts:AssumeRole", "sts:TagSession"]
+    }]
+  })
+
+  tags = { Name = var.aws_lb_controller_role_name }
+}
+
+# ── AWS Load Balancer Controller Policy ──
+resource "aws_iam_policy" "aws_lb_controller_policy" {
+  name        = var.aws_lb_controller_policy_name
+  description = "Permissions for AWS Load Balancer Controller"
+
+  policy = file("${path.module}/policies/aws-lb-controller-policy.json.tftpl")
+
+  tags = { Name = var.aws_lb_controller_policy_name }
+}
+
+# ── Attach Policy to Role ──
+resource "aws_iam_role_policy_attachment" "aws_lb_controller_policy_associate" {
+  role       = aws_iam_role.aws_lb_controller_role.name
+  policy_arn = aws_iam_policy.aws_lb_controller_policy.arn
+}

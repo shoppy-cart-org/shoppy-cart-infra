@@ -74,3 +74,15 @@ variable "ebs_csi_role_name" {
   type        = string
   default     = "ScEbsCsiRole"
 }
+
+variable "aws_lb_controller_role_name" {
+  description = "Name of the AWS Load Balancer Controller IAM role"
+  type        = string
+  default     = "ScAwsLbControllerRole"
+}
+
+variable "aws_lb_controller_policy_name" {
+  description = "Name of the AWS Load Balancer Controller IAM policy"
+  type        = string
+  default     = "sc-aws-lb-controller-policy"
+}
