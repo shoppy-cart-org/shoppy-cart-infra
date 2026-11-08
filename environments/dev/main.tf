@@ -88,4 +88,6 @@ module "ecr" {
 
   image_retention_count         = 30
   untagged_image_retention_days = 7
+
+  depends_on = [ module.iam ]
 }
