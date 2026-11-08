@@ -64,3 +64,28 @@ module "eks" {
 
   tags = local.common_tags
 }
+
+
+module "ecr" {
+  source = "../../modules/ecr"
+
+  project_name = var.project_name
+
+  service_names = toset([
+    "adservice",
+    "cartservice",
+    "checkoutservice",
+    "currencyservice",
+    "emailservice",
+    "frontend",
+    "loadgenerator",
+    "paymentservice",
+    "productcatalogservice",
+    "recommendationservice",
+    "shippingservice",
+    "shoppingassistantservice"
+  ])
+
+  image_retention_count         = 30
+  untagged_image_retention_days = 7
+}
