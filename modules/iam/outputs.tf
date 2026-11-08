@@ -42,3 +42,8 @@ output "ebs_csi_role_arn" {
 
   depends_on = [aws_iam_role_policy_attachment.ebs_csi]
 }
+
+output "aws_lb_controller_role_arn" {
+  description = "ARN of the AWS Load Balancer Controller IAM role"
+  value       = aws_iam_role.aws_lb_controller_role.arn
+}

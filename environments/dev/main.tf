@@ -54,13 +54,14 @@ module "bastion" {
 module "eks" {
   source = "../../modules/eks"
 
-  private_subnet_ids = module.vpc.private_app_subnet_ids
-  public_subnet_ids  = module.vpc.public_subnet_ids
-  cluster_role_arn   = module.iam.eks_cluster_role_arn
-  node_role_arn      = module.iam.eks_node_role_arn
-  ebs_csi_role_arn   = module.iam.ebs_csi_role_arn
-  bastion_role_arn   = module.iam.bastion_role_arn
-  bastion_sg_id      = module.security-groups.bastion_sg_id
+  private_subnet_ids         = module.vpc.private_app_subnet_ids
+  public_subnet_ids          = module.vpc.public_subnet_ids
+  cluster_role_arn           = module.iam.eks_cluster_role_arn
+  node_role_arn              = module.iam.eks_node_role_arn
+  ebs_csi_role_arn           = module.iam.ebs_csi_role_arn
+  bastion_role_arn           = module.iam.bastion_role_arn
+  bastion_sg_id              = module.security-groups.bastion_sg_id
+  aws_lb_controller_role_arn = module.iam.aws_lb_controller_role_arn
 
   tags = local.common_tags
 }

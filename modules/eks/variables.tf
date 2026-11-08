@@ -80,3 +80,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "aws_lb_controller_role_arn" {
+  description = "ARN of the AWS Load Balancer Controller IAM role (Pod Identity)"
+  type        = string
+}
