@@ -103,3 +103,18 @@ output "eks_cluster_endpoint" {
   description = "EKS cluster endpoint (private)"
   value       = module.eks.cluster_endpoint
 }
+
+output "ecr_repository_names" {
+  description = "Names of the Shoppy Cart ECR repositories."
+  value       = module.ecr.repository_names
+}
+
+output "ecr_repository_urls" {
+  description = "URLs of the Shoppy Cart ECR repositories."
+  value       = module.ecr.repository_urls
+}
+
+output "ecr_repository_arns" {
+  description = "ARNs of the Shoppy Cart ECR repositories."
+  value       = module.ecr.repository_arns
+}

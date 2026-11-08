@@ -1,6 +1,7 @@
 vpc_cidr               = "10.70.0.0/16"
 vpc_name               = "sc-vpc"
 igw_name               = "sc-igw"
-my_ip                  = "129.0.189.184/32"
+my_ip                  = "129.0.189.188/32"
 terraform_state_bucket = "shoppy-cart-s3-terraform-state"
 terraform_state_key    = "environments/dev/terraform.tfstate"
+project_name           = "shoppy-cart"

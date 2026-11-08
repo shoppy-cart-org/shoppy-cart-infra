@@ -39,3 +39,8 @@ variable "bastion_public_key" {
   description = "Bastion EC2 public key content"
   type        = string
 }
+
+variable "project_name" {
+  description = "Project name used as the ECR repository namespace."
+  type        = string
+}
