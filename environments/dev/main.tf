@@ -62,6 +62,7 @@ module "eks" {
   bastion_role_arn           = module.iam.bastion_role_arn
   bastion_sg_id              = module.security-groups.bastion_sg_id
   aws_lb_controller_role_arn = module.iam.aws_lb_controller_role_arn
+  external_dns_role_arn      = module.iam.external_dns_role_arn
 
   tags = local.common_tags
 }
