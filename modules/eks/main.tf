@@ -118,3 +118,11 @@ resource "aws_eks_pod_identity_association" "aws_lb_controller" {
   service_account = "aws-load-balancer-controller"
   role_arn        = var.aws_lb_controller_role_arn
 }
+
+# ── ExternalDNS Pod Identity Association ──
+resource "aws_eks_pod_identity_association" "external_dns" {
+  cluster_name    = aws_eks_cluster.my_eks.name
+  namespace       = "external-dns"
+  service_account = "external-dns"
+  role_arn        = var.external_dns_role_arn
+}

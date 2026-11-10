@@ -244,3 +244,33 @@ resource "aws_iam_role_policy_attachment" "aws_lb_controller_policy_associate" {
   role       = aws_iam_role.aws_lb_controller_role.name
   policy_arn = aws_iam_policy.aws_lb_controller_policy.arn
 }
+
+# ── ExternalDNS Role (Pod Identity) ──
+resource "aws_iam_role" "external_dns_role" {
+  name = "ScExternalDnsRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "pods.eks.amazonaws.com" }
+      Action    = ["sts:AssumeRole", "sts:TagSession"]
+    }]
+  })
+
+  tags = { Name = "ScExternalDnsRole" }
+}
+
+resource "aws_iam_policy" "external_dns_policy" {
+  name        = "sc-external-dns-policy"
+  description = "Route53 permissions for ExternalDNS"
+
+  policy = file("${path.module}/policies/external-dns-policy.json.tftpl")
+
+  tags = { Name = "sc-external-dns-policy" }
+}
+
+resource "aws_iam_role_policy_attachment" "external_dns_associate" {
+  role       = aws_iam_role.external_dns_role.name
+  policy_arn = aws_iam_policy.external_dns_policy.arn
+}
