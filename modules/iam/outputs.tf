@@ -52,3 +52,8 @@ output "external_dns_role_arn" {
   description = "ARN of the External DNS IAM role"
   value       = aws_iam_role.external_dns_role.arn
 }
+
+output "app_ci_role_arn" {
+  description = "ARN of the App CI IAM role"
+  value       = aws_iam_role.app_ci_role.arn
+}
