@@ -274,3 +274,33 @@ resource "aws_iam_role_policy_attachment" "external_dns_associate" {
   role       = aws_iam_role.external_dns_role.name
   policy_arn = aws_iam_policy.external_dns_policy.arn
 }
+
+# ── App CI Role (ECR push only) ──
+resource "aws_iam_role" "app_ci_role" {
+  name = "ScAppCiRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { AWS = aws_iam_role.runner_role.arn }
+      Action    = ["sts:AssumeRole", "sts:TagSession"]
+    }]
+  })
+
+  tags = { Name = "ScAppCiRole" }
+}
+
+resource "aws_iam_policy" "app_ci_policy" {
+  name        = "sc-app-ci-policy"
+  description = "ECR push permissions for app CI"
+
+  policy = file("${path.module}/policies/app-ci-policy.json.tftpl")
+
+  tags = { Name = "sc-app-ci-policy" }
+}
+
+resource "aws_iam_role_policy_attachment" "app_ci_associate" {
+  role       = aws_iam_role.app_ci_role.name
+  policy_arn = aws_iam_policy.app_ci_policy.arn
+}
