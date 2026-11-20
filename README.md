@@ -429,7 +429,7 @@ These are the gotchas that affect **this repo specifically**. Full list in `docs
 
 This repo is one piece of the platform. For the complete, end-to-end guide — architecture, build order, credential matrix, all 15 gotchas, runbooks, and what's not included — see the docs repo:
 
-**https://github.com/shoppy-cart-org/shoppy-cart-docs**
+**https://github.com/shoppy-cart-org/shoppy-cart-doc**
 
 | Doc | What it covers |
 |---|---|
